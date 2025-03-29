@@ -11,14 +11,14 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Nils Adermann",
-            "email": "naderman@naderman.de",
-            "homepage": "https://www.naderman.de"
+            "name": "Go Wide Online",
+            "email": "mail@gowide.online",
+            "homepage": "https://www.gowide.online"
         },
         {
-            "name": "Jordi Boggiano",
-            "email": "j.boggiano@seld.be",
-            "homepage": "https://seld.be"
+            "name": "Go Wide Online",
+            "email": "mail@gowide.online",
+            "homepage": "https://gowide.online"
         }
     ],
     "require": {
