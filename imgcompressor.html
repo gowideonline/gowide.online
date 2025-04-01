@@ -3,90 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Compressor</title>
+    <title>Image Compressor Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #4361ee;
-            --primary-hover: #3a56d4;
-            --secondary-color: #f8f9ff;
-            --text-color: #2b2d42;
-            --light-text: #6c757d;
-            --border-color: #e0e0e0;
-            --success-color: #4cc9f0;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+            --primary: #4361ee;
+            --primary-light: #e6e9ff;
+            --primary-dark: #3a56d4;
+            --text: #2b2d42;
+            --text-light: #6c757d;
+            --border: #e0e0e0;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --success: #4cc9f0;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
             --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
-            --border-radius: 12px;
-            --transition: all 0.3s ease;
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --transition: all 0.25s ease;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
         body {
-            background-color: #f8fafc;
-            color: var(--text-color);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
-            line-height: 1.5;
+            padding: 1.5rem;
         }
 
         .container {
             width: 100%;
-            max-width: 900px;
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-md);
+            max-width: 1000px;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
             overflow: hidden;
-            transition: var(--transition);
         }
 
-        .compressor-header {
-            padding: 24px;
-            background: linear-gradient(135deg, var(--primary-color) 0%, #3f37c9 100%);
+        .header {
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--primary) 0%, #3f37c9 100%);
             color: white;
             text-align: center;
         }
 
-        .compressor-header h1 {
-            font-size: 1.8rem;
+        .header h1 {
+            font-size: 2rem;
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 0.5rem;
         }
 
-        .compressor-header p {
+        .header p {
             opacity: 0.9;
-            font-size: 0.95rem;
+            font-size: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        .compressor-body {
-            padding: 30px;
+        .content {
+            padding: 2rem;
         }
 
+        /* Upload Area */
         .upload-area {
-            border: 2px dashed var(--border-color);
-            border-radius: var(--border-radius);
-            padding: 40px 20px;
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 3rem 2rem;
             text-align: center;
             cursor: pointer;
             transition: var(--transition);
-            margin-bottom: 30px;
+            margin-bottom: 2rem;
             position: relative;
-            background-color: var(--secondary-color);
+            background-color: var(--primary-light);
         }
 
         .upload-area.highlight {
-            border-color: var(--primary-color);
+            border-color: var(--primary);
             background-color: rgba(67, 97, 238, 0.05);
         }
 
-        .upload-area input[type="file"] {
+        .upload-area input {
             position: absolute;
             width: 100%;
             height: 100%;
@@ -99,37 +106,47 @@
         .upload-icon {
             width: 80px;
             height: 80px;
-            margin: 0 auto 20px;
+            margin: 0 auto 1.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
             background-color: rgba(67, 97, 238, 0.1);
             border-radius: 50%;
-            color: var(--primary-color);
-            font-size: 36px;
+            color: var(--primary);
             transition: var(--transition);
+        }
+
+        .upload-icon svg {
+            width: 36px;
+            height: 36px;
         }
 
         .upload-area:hover .upload-icon {
             transform: scale(1.05);
         }
 
+        .upload-area h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
         .upload-area p {
-            color: var(--light-text);
-            margin-top: 10px;
+            color: var(--text-light);
         }
 
-        .upload-area .file-info {
-            margin-top: 15px;
+        .file-info {
+            margin-top: 1rem;
             font-weight: 500;
-            color: var(--primary-color);
+            color: var(--primary);
         }
 
+        /* Controls */
         .controls {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         .control-group {
@@ -139,35 +156,36 @@
 
         .control-group label {
             font-weight: 500;
-            margin-bottom: 10px;
+            margin-bottom: 0.75rem;
             display: flex;
             align-items: center;
+            gap: 0.5rem;
         }
 
         .control-group label svg {
-            margin-right: 8px;
             width: 18px;
             height: 18px;
+            color: var(--primary);
         }
 
         .range-container {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 1rem;
         }
 
         .range-value {
             min-width: 40px;
             text-align: center;
             font-weight: 600;
-            color: var(--primary-color);
+            color: var(--primary);
         }
 
         input[type="range"] {
             flex: 1;
             height: 8px;
             -webkit-appearance: none;
-            background: var(--border-color);
+            background: var(--border);
             border-radius: 4px;
             outline: none;
             transition: var(--transition);
@@ -181,7 +199,7 @@
             -webkit-appearance: none;
             width: 20px;
             height: 20px;
-            background: var(--primary-color);
+            background: var(--primary);
             border-radius: 50%;
             cursor: pointer;
             transition: var(--transition);
@@ -194,46 +212,48 @@
 
         select {
             width: 100%;
-            padding: 12px 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            background: white;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--card-bg);
             font-size: 0.95rem;
             transition: var(--transition);
             appearance: none;
             background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
             background-repeat: no-repeat;
-            background-position: right 10px center;
+            background-position: right 12px center;
             background-size: 16px;
         }
 
         select:focus {
-            border-color: var(--primary-color);
+            border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
         }
 
+        /* Button */
         .btn {
-            background: var(--primary-color);
+            background: var(--primary);
             color: white;
             border: none;
-            padding: 14px 28px;
-            border-radius: 8px;
+            padding: 0.875rem 1.75rem;
+            border-radius: var(--radius-sm);
             cursor: pointer;
             font-weight: 600;
             transition: var(--transition);
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 0.75rem;
             font-size: 1rem;
             width: 100%;
             box-shadow: var(--shadow-sm);
+            align-self: flex-end;
         }
 
         .btn:hover {
-            background: var(--primary-hover);
+            background: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.2);
+            box-shadow: var(--shadow-md);
         }
 
         .btn:active {
@@ -252,25 +272,27 @@
             height: 18px;
         }
 
+        /* Results */
         .results {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
+            gap: 1.5rem;
+            margin-top: 2rem;
         }
 
         .result-card {
-            background: white;
-            border-radius: var(--border-radius);
+            background: var(--card-bg);
+            border-radius: var(--radius);
             overflow: hidden;
             box-shadow: var(--shadow-sm);
             transition: var(--transition);
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--border);
+            animation: fadeIn 0.3s ease forwards;
         }
 
         .result-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow-md);
         }
 
         .result-image-container {
@@ -290,21 +312,22 @@
         }
 
         .result-details {
-            padding: 18px;
+            padding: 1.25rem;
         }
 
         .result-meta {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 12px;
+            margin-bottom: 0.75rem;
             font-size: 0.85rem;
-            color: var(--light-text);
+            color: var(--text-light);
         }
 
         .result-stats {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.25rem;
         }
 
         .stat {
@@ -313,27 +336,27 @@
 
         .stat-value {
             font-weight: 700;
-            color: var(--primary-color);
+            color: var(--primary);
             font-size: 1.1rem;
         }
 
         .stat-label {
             font-size: 0.75rem;
-            color: var(--light-text);
-            margin-top: 2px;
+            color: var(--text-light);
+            margin-top: 0.25rem;
         }
 
         .progress-container {
             height: 6px;
             background: #f0f0f0;
             border-radius: 3px;
-            margin-bottom: 15px;
+            margin-bottom: 1.25rem;
             overflow: hidden;
         }
 
         .progress-bar {
             height: 100%;
-            background: var(--success-color);
+            background: var(--success);
             border-radius: 3px;
             transition: width 0.5s ease;
         }
@@ -341,77 +364,51 @@
         .download-btn {
             display: block;
             text-align: center;
-            background: var(--primary-color);
+            background: var(--primary);
             color: white;
-            padding: 10px;
-            border-radius: 6px;
+            padding: 0.75rem;
+            border-radius: var(--radius-sm);
             text-decoration: none;
             font-weight: 500;
             font-size: 0.9rem;
             transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
         }
 
         .download-btn:hover {
-            background: var(--primary-hover);
+            background: var(--primary-dark);
         }
 
+        .download-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Empty State */
         .empty-state {
             text-align: center;
-            padding: 40px 20px;
-            color: var(--light-text);
+            padding: 3rem 2rem;
+            color: var(--text-light);
+            grid-column: 1 / -1;
         }
 
         .empty-state svg {
             width: 60px;
             height: 60px;
-            margin-bottom: 15px;
+            margin-bottom: 1rem;
             opacity: 0.6;
         }
 
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .compressor-body {
-                padding: 20px;
-            }
-            
-            .upload-area {
-                padding: 30px 15px;
-            }
-            
-            .controls {
-                grid-template-columns: 1fr;
-            }
+        .empty-state h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
         }
 
-        @media (max-width: 480px) {
-            .compressor-header h1 {
-                font-size: 1.5rem;
-            }
-            
-            .compressor-header p {
-                font-size: 0.85rem;
-            }
-            
-            .result-stats {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .stat {
-                text-align: left;
-            }
-        }
-
-        /* Animation */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .result-card {
-            animation: fadeIn 0.3s ease forwards;
-        }
-
+        /* Loading Spinner */
         .loading-spinner {
             display: inline-block;
             width: 20px;
@@ -425,16 +422,81 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .content {
+                padding: 1.5rem;
+            }
+            
+            .upload-area {
+                padding: 2rem 1.5rem;
+            }
+            
+            .controls {
+                grid-template-columns: 1fr;
+            }
+            
+            .result-stats {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+            
+            .stat {
+                text-align: left;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .header {
+                padding: 1.5rem;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .header p {
+                font-size: 0.9rem;
+            }
+            
+            .upload-icon {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .upload-icon svg {
+                width: 28px;
+                height: 28px;
+            }
+            
+            .upload-area h3 {
+                font-size: 1.1rem;
+            }
+            
+            .results {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="compressor-header">
-            <h1>Image Compressor</h1>
-            <p>Reduce image file size without losing quality</p>
+        <div class="header">
+            <h1>Image Compressor Pro</h1>
+            <p>Reduce image file sizes without quality loss. Perfect for web optimization.</p>
         </div>
         
-        <div class="compressor-body">
+        <div class="content">
             <div class="upload-area" id="dropZone">
                 <input type="file" id="fileInput" accept="image/*" multiple>
                 <div class="upload-icon">
@@ -442,8 +504,8 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                     </svg>
                 </div>
-                <h3>Drag & drop images here</h3>
-                <p>or click to browse files</p>
+                <h3>Drag & Drop Images Here</h3>
+                <p>or click to browse files (JPEG, PNG, WebP supported)</p>
                 <div class="file-info" id="fileInfo"></div>
             </div>
             
@@ -476,7 +538,7 @@
                     </select>
                 </div>
                 
-                <button id="compressBtn" disabled>
+                                <button id="compressBtn" class="btn" disabled>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" />
                     </svg>
@@ -487,9 +549,9 @@
             <div class="results" id="results">
                 <div class="empty-state">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 8l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M5 3a2 2 0 00-2 2v1c0 8.284 6.716 15 15 15h1a2 2 0 002-2v-1c0-8.284-6.716-15-15-15H5z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
-                    <h3>No images uploaded yet</h3>
+                    <h3>No Images Uploaded Yet</h3>
                     <p>Your compressed images will appear here</p>
                 </div>
             </div>
@@ -507,6 +569,7 @@
             const outputFormat = document.getElementById('outputFormat');
             const compressBtn = document.getElementById('compressBtn');
             const resultsDiv = document.getElementById('results');
+            const emptyState = document.querySelector('.empty-state');
             
             // State
             let files = [];
@@ -527,6 +590,7 @@
             
             function handleDragOver(e) {
                 e.preventDefault();
+                e.stopPropagation();
                 dropZone.classList.add('highlight');
             }
             
@@ -536,17 +600,34 @@
             
             function handleDrop(e) {
                 e.preventDefault();
+                e.stopPropagation();
                 dropZone.classList.remove('highlight');
                 
-                if (e.dataTransfer.files.length) {
-                    files = Array.from(e.dataTransfer.files);
+                if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                    files = Array.from(e.dataTransfer.files).filter(file => 
+                        file.type.match('image.*')
+                    );
+                    
+                    if (files.length === 0) {
+                        showError("Please upload valid image files only");
+                        return;
+                    }
+                    
                     fileInput.files = e.dataTransfer.files;
                     updateFileInfo();
                 }
             }
             
             function handleFileSelect() {
-                files = Array.from(this.files);
+                files = Array.from(this.files).filter(file => 
+                    file.type.match('image.*')
+                );
+                
+                if (files.length === 0) {
+                    showError("Please select valid image files");
+                    return;
+                }
+                
                 updateFileInfo();
             }
             
@@ -558,14 +639,35 @@
                 }
                 
                 const totalSize = files.reduce((sum, file) => sum + file.size, 0);
-                fileInfo.textContent = `${files.length} file(s) selected • ${formatBytes(totalSize)}`;
+                fileInfo.textContent = `${files.length} ${files.length === 1 ? 'file' : 'files'} selected • ${formatBytes(totalSize)}`;
                 compressBtn.disabled = false;
                 
-                // Hide empty state if files are selected
-                const emptyState = document.querySelector('.empty-state');
+                // Hide empty state
                 if (emptyState) {
                     emptyState.style.display = 'none';
                 }
+            }
+            
+            function showError(message) {
+                const errorEl = document.createElement('div');
+                errorEl.className = 'error-message';
+                errorEl.textContent = message;
+                errorEl.style.color = '#e63946';
+                errorEl.style.marginTop = '10px';
+                errorEl.style.fontWeight = '500';
+                
+                // Remove existing error if any
+                const existingError = dropZone.querySelector('.error-message');
+                if (existingError) {
+                    existingError.remove();
+                }
+                
+                dropZone.appendChild(errorEl);
+                
+                // Auto remove after 3 seconds
+                setTimeout(() => {
+                    errorEl.remove();
+                }, 3000);
             }
             
             function startCompression() {
@@ -599,17 +701,17 @@
             }
             
             async function processFiles(files, quality, format) {
-                for (const file of files) {
+                for (const [index, file] of files.entries()) {
                     try {
-                        await compressAndDisplay(file, quality, format);
+                        await compressAndDisplay(file, quality, format, index);
                     } catch (error) {
                         console.error('Error processing file:', file.name, error);
-                        // You could show an error message for this file
+                        showError(`Failed to process ${file.name}`);
                     }
                 }
             }
             
-            function compressAndDisplay(file, quality, format) {
+            function compressAndDisplay(file, quality, format, index) {
                 return new Promise((resolve) => {
                     const reader = new FileReader();
                     
@@ -618,10 +720,13 @@
                         img.src = e.target.result;
                         
                         img.onload = function() {
+                            // Create canvas with the same dimensions as the image
                             const canvas = document.createElement('canvas');
                             const ctx = canvas.getContext('2d');
                             canvas.width = img.width;
                             canvas.height = img.height;
+                            
+                            // Draw image on canvas
                             ctx.drawImage(img, 0, 0);
                             
                             // Determine output format
@@ -646,21 +751,27 @@
                                     mimeType = 'image/jpeg';
                             }
                             
-                            // Compress image
-                            canvas.toBlob(function(blob) {
-                                displayResult(file, blob, img.width, img.height);
-                                resolve();
-                            }, mimeType, quality / 100);
+                            // Compress image with quality setting
+                            canvas.toBlob(
+                                (blob) => {
+                                    displayResult(file, blob, img.width, img.height, index);
+                                    resolve();
+                                },
+                                mimeType,
+                                quality / 100
+                            );
                         };
                         
                         img.onerror = function() {
                             console.error('Error loading image:', file.name);
+                            showError(`Failed to load ${file.name}`);
                             resolve();
                         };
                     };
                     
                     reader.onerror = function() {
                         console.error('Error reading file:', file.name);
+                        showError(`Failed to read ${file.name}`);
                         resolve();
                     };
                     
@@ -668,7 +779,7 @@
                 });
             }
             
-            function displayResult(originalFile, compressedBlob, width, height) {
+            function displayResult(originalFile, compressedBlob, width, height, index) {
                 const originalSize = originalFile.size;
                 const compressedSize = compressedBlob.size;
                 const reduction = ((originalSize - compressedSize) / originalSize * 100).toFixed(2);
@@ -676,16 +787,18 @@
                 const fileName = originalFile.name.substring(0, originalFile.name.lastIndexOf('.'));
                 const fileExt = compressedBlob.type.split('/')[1];
                 
+                // Create result card
                 const resultCard = document.createElement('div');
                 resultCard.className = 'result-card';
+                resultCard.style.animationDelay = `${index * 0.1}s`;
                 
                 resultCard.innerHTML = `
                     <div class="result-image-container">
-                        <img src="${URL.createObjectURL(compressedBlob)}" class="result-image" alt="Compressed">
+                        <img src="${URL.createObjectURL(compressedBlob)}" class="result-image" alt="Compressed ${fileName}" loading="lazy">
                     </div>
                     <div class="result-details">
                         <div class="result-meta">
-                            <span>${fileName.substring(0, 20)}${fileName.length > 20 ? '...' : ''}.${fileExt}</span>
+                            <span title="${fileName}.${fileExt}">${truncateString(fileName, 15)}.${fileExt}</span>
                             <span>${width}×${height}</span>
                         </div>
                         
@@ -704,14 +817,14 @@
                             </div>
                             <div class="stat">
                                 <div class="stat-value">${reduction}%</div>
-                                <div class="stat-label">Smaller</div>
+                                <div class="stat-label">Reduction</div>
                             </div>
                         </div>
                         
                         <a href="${URL.createObjectURL(compressedBlob)}" 
                            download="${fileName}_compressed.${fileExt}" 
                            class="download-btn">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="16" height="16">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                             </svg>
                             Download
@@ -720,6 +833,17 @@
                 `;
                 
                 resultsDiv.appendChild(resultCard);
+                
+                // Revoke object URL when the card is removed
+                resultCard.addEventListener('click', (e) => {
+                    if (e.target.tagName === 'A') return;
+                    URL.revokeObjectURL(resultCard.querySelector('img').src);
+                    URL.revokeObjectURL(resultCard.querySelector('a').href);
+                }, { once: true });
+            }
+            
+            function truncateString(str, n) {
+                return (str.length > n) ? str.substr(0, n-1) + '...' : str;
             }
             
             function formatBytes(bytes) {
