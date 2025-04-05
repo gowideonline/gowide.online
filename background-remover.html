@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Background Remover | Professional Quality</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --primary-dark: #4a3faf;
+            --success: #00b894;
+            --error: #d63031;
+            --light: #f8f9fa;
+            --dark: #2d3436;
+            --gray: #636e72;
+            --border: #dfe6e9;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f1f5f9;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 2.5rem;
+        }
+
+        .subtitle {
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .tool-box {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 3rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 1.5rem;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: rgba(108, 92, 231, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .upload-text h3 {
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .upload-text p {
+            color: var(--gray);
+        }
+
+        #file-input {
+            display: none;
+        }
+
+        /* Preview Section */
+        .preview-section {
+            display: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .preview-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            overflow: hidden;
+            max-width: 100%;
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 400px;
+            display: block;
+        }
+
+        .canvas-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            cursor: crosshair;
+        }
+
+        .file-info {
+            background: var(--light);
+            padding: 0.8rem;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .file-name {
+            font-weight: bold;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 70%;
+        }
+
+        .file-size {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .remove-btn {
+            background: none;
+            border: none;
+            color: var(--error);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .control-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 0.7rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+        }
+
+        .color-picker {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        #bg-color {
+            flex: 1;
+            height: 40px;
+            padding: 0.2rem;
+        }
+
+        #bg-color2 {
+            flex: 1;
+            height: 40px;
+            padding: 0.2rem;
+            display: none;
+        }
+
+        .brush-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .brush-size {
+            flex: 1;
+        }
+
+        /* Selection Modes */
+        .selection-modes {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            background: white;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .mode-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Buttons */
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            background: var(--gray);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn i {
+            font-size: 1rem;
+        }
+
+        .download-btn {
+            background: var(--success);
+        }
+
+        .download-btn:hover {
+            background: #00a884;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Status Message */
+        .status {
+            text-align: center;
+            margin-top: 1rem;
+            min-height: 24px;
+            font-weight: 500;
+        }
+
+        .error {
+            color: var(--error);
+        }
+
+        .success {
+            color: var(--success);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: var(--gray);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .controls {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .selection-modes {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI Background Remover</h1>
+            <p class="subtitle">Upload an image to automatically remove the background with clean edges and replace it with your preferred background.</p>
+        </header>
+
+        <div class="tool-box">
+            <!-- Upload Area -->
+            <div class="upload-area" id="upload-area">
+                <div class="upload-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <div class="upload-text">
+                    <h3>Drag & Drop Your Image</h3>
+                    <p>or click to browse files</p>
+                </div>
+                <input type="file" id="file-input" accept="image/*">
+            </div>
+
+            <!-- Preview Section -->
+            <div class="preview-section" id="preview-section">
+                <div class="preview-container">
+                    <img id="image-preview" class="image-preview" src="#" alt="Preview">
+                    <canvas id="canvas-overlay" class="canvas-overlay"></canvas>
+                </div>
+                <div class="file-info">
+                    <span class="file-name" id="file-name"></span>
+                    <span class="file-size" id="file-size"></span>
+                    <button class="remove-btn" id="remove-btn" title="Remove">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Selection Modes -->
+            <div class="selection-modes">
+                <button class="mode-btn active" id="auto-mode">
+                    <i class="fas fa-robot"></i> Auto Remove
+                </button>
+                <button class="mode-btn" id="brush-mode">
+                    <i class="fas fa-paint-brush"></i> Manual Select
+                </button>
+                <button class="mode-btn" id="restore-mode">
+                    <i class="fas fa-undo"></i> Restore Areas
+                </button>
+            </div>
+
+            <!-- Controls -->
+            <div class="controls">
+                <div class="control-group">
+                    <label for="bg-type">Background Type</label>
+                    <select id="bg-type">
+                        <option value="transparent">Transparent</option>
+                        <option value="solid">Solid Color</option>
+                        <option value="gradient">Gradient</option>
+                    </select>
+                </div>
+
+                <div class="control-group" id="solid-color-group">
+                    <label for="bg-color">Background Color</label>
+                    <div class="color-picker">
+                        <input type="color" id="bg-color" value="#ffffff">
+                    </div>
+                </div>
+
+                <div class="control-group" id="gradient-color-group" style="display: none;">
+                    <label>Gradient Colors</label>
+                    <div class="color-picker">
+                        <input type="color" id="bg-color" value="#ffffff">
+                        <input type="color" id="bg-color2" value="#6c5ce7">
+                    </div>
+                </div>
+
+                <div class="control-group" id="brush-controls" style="display: none;">
+                    <label for="brush-size">Brush Size: <span id="brush-size-value">20</span></label>
+                    <input type="range" id="brush-size" class="brush-size" min="5" max="100" value="20">
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn" id="process-btn" disabled>
+                    <i class="fas fa-magic"></i> Process Image
+                </button>
+                <button class="btn download-btn" id="download-btn" disabled>
+                    <i class="fas fa-download"></i> Download
+                </button>
+            </div>
+
+            <!-- Status Message -->
+            <div class="status" id="status"></div>
+        </div>
+
+        <footer>
+            <p>AI Background Remover &copy; <span id="year"></span></p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const uploadArea = document.getElementById('upload-area');
+            const fileInput = document.getElementById('file-input');
+            const previewSection = document.getElementById('preview-section');
+            const previewContainer = document.querySelector('.preview-container');
+            const imagePreview = document.getElementById('image-preview');
+            const canvasOverlay = document.getElementById('canvas-overlay');
+            const fileName = document.getElementById('file-name');
+            const fileSize = document.getElementById('file-size');
+            const removeBtn = document.getElementById('remove-btn');
+            const autoModeBtn = document.getElementById('auto-mode');
+            const brushModeBtn = document.getElementById('brush-mode');
+            const restoreModeBtn = document.getElementById('restore-mode');
+            const bgTypeSelect = document.getElementById('bg-type');
+            const solidColorGroup = document.getElementById('solid-color-group');
+            const gradientColorGroup = document.getElementById('gradient-color-group');
+            const brushControls = document.getElementById('brush-controls');
+            const brushSize = document.getElementById('brush-size');
+            const brushSizeValue = document.getElementById('brush-size-value');
+            const processBtn = document.getElementById('process-btn');
+            const downloadBtn = document.getElementById('download-btn');
+            const statusEl = document.getElementById('status');
+            const yearEl = document.getElementById('year');
+
+            // Set current year in footer
+            yearEl.textContent = new Date().getFullYear();
+
+            // State variables
+            let originalFile = null;
+            let processedBlob = null;
+            let isDrawing = false;
+            let currentBrushSize = 20;
+            let currentMode = 'auto'; // 'auto', 'remove', 'restore'
+            let originalImageData = null;
+            let canvasContext = null;
+            let imageWidth = 0;
+            let imageHeight = 0;
+            let scaleX = 1;
+            let scaleY = 1;
+
+            // Event Listeners
+            uploadArea.addEventListener('click', () => fileInput.click());
+            uploadArea.addEventListener('dragover', handleDragOver);
+            uploadArea.addEventListener('dragleave', handleDragLeave);
+            uploadArea.addEventListener('drop', handleDrop);
+            fileInput.addEventListener('change', handleFileSelect);
+            removeBtn.addEventListener('click', resetTool);
+            autoModeBtn.addEventListener('click', () => setMode('auto'));
+            brushModeBtn.addEventListener('click', () => setMode('remove'));
+            restoreModeBtn.addEventListener('click', () => setMode('restore'));
+            bgTypeSelect.addEventListener('change', updateBackgroundControls);
+            brushSize.addEventListener('input', updateBrushSize);
+            canvasOverlay.addEventListener('mousedown', startDrawing);
+            canvasOverlay.addEventListener('mousemove', draw);
+            canvasOverlay.addEventListener('mouseup', stopDrawing);
+            canvasOverlay.addEventListener('mouseout', stopDrawing);
+            processBtn.addEventListener('click', processImage);
+            downloadBtn.addEventListener('click', downloadImage);
+
+            // Functions
+            function handleDragOver(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                uploadArea.style.borderColor = 'var(--primary)';
+                uploadArea.style.background = 'rgba(108, 92, 231, 0.05)';
+            }
+
+            function handleDragLeave(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                uploadArea.style.borderColor = 'var(--border)';
+                uploadArea.style.background = 'white';
+            }
+
+            function handleDrop(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                handleDragLeave(e);
+
+                if (e.dataTransfer.files.length) {
+                    fileInput.files = e.dataTransfer.files;
+                    handleFileSelect({ target: fileInput });
+                }
+            }
+
+            function handleFileSelect(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                // Check if file is an image
+                if (!file.type.startsWith('image/')) {
+                    showStatus('Please select an image file (JPG, PNG, GIF, WEBP).', 'error');
+                    return;
+                }
+
+                originalFile = file;
+
+                // Display file info
+                fileName.textContent = file.name;
+                fileSize.textContent = formatFileSize(file.size);
+
+                // Preview image
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    
+                    // Wait for image to load
+                    imagePreview.onload = function() {
+                        initCanvas();
+                        previewSection.style.display = 'block';
+                        uploadArea.style.display = 'none';
+                        processBtn.disabled = false;
+                        downloadBtn.disabled = true;
+                        showStatus('Ready to remove background!', 'success');
+                    };
+                };
+                reader.readAsDataURL(file);
+            }
+
+            function initCanvas() {
+                imageWidth = imagePreview.naturalWidth;
+                imageHeight = imagePreview.naturalHeight;
+                
+                // Set canvas dimensions
+                canvasOverlay.width = imageWidth;
+                canvasOverlay.height = imageHeight;
+                
+                // Calculate scale factors for mouse position
+                const rect = canvasOverlay.getBoundingClientRect();
+                scaleX = imageWidth / rect.width;
+                scaleY = imageHeight / rect.height;
+                
+                canvasContext = canvasOverlay.getContext('2d');
+                
+                // Store original image data
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = imageWidth;
+                tempCanvas.height = imageHeight;
+                const tempCtx = tempCanvas.getContext('2d');
+                tempCtx.drawImage(imagePreview, 0, 0);
+                originalImageData = tempCtx.getImageData(0, 0, imageWidth, imageHeight);
+            }
+
+            function formatFileSize(bytes) {
+                if (bytes < 1024) return bytes + ' Bytes';
+                else if (bytes < 1048576) return (bytes / 1024).toFixed(2) + ' KB';
+                else return (bytes / 1048576).toFixed(2) + ' MB';
+            }
+
+            function setMode(mode) {
+                currentMode = mode;
+                
+                // Update UI
+                autoModeBtn.classList.remove('active');
+                brushModeBtn.classList.remove('active');
+                restoreModeBtn.classList.remove('active');
+                
+                if (mode === 'auto') {
+                    autoModeBtn.classList.add('active');
+                    brushControls.style.display = 'none';
+                    showStatus('Auto background removal mode', 'success');
+                } else if (mode === 'remove') {
+                    brushModeBtn.classList.add('active');
+                    brushControls.style.display = 'block';
+                    showStatus('Brush mode - mark areas to remove', 'success');
+                } else if (mode === 'restore') {
+                    restoreModeBtn.classList.add('active');
+                    brushControls.style.display = 'block';
+                    showStatus('Brush mode - mark areas to keep', 'success');
+                }
+            }
+
+            function updateBackgroundControls() {
+                const bgType = bgTypeSelect.value;
+                solidColorGroup.style.display = bgType === 'solid' ? 'block' : 'none';
+                gradientColorGroup.style.display = bgType === 'gradient' ? 'block' : 'none';
+            }
+
+            function updateBrushSize() {
+                currentBrushSize = parseInt(brushSize.value);
+                brushSizeValue.textContent = currentBrushSize;
+            }
+
+            function startDrawing(e) {
+                if (currentMode === 'auto') return;
+                
+                isDrawing = true;
+                draw(e);
+            }
+
+            function draw(e) {
+                if (!isDrawing || currentMode === 'auto') return;
+                
+                const rect = canvasOverlay.getBoundingClientRect();
+                const x = (e.clientX - rect.left) * scaleX;
+                const y = (e.clientY - rect.top) * scaleY;
+                
+                // Set brush color based on mode
+                if (currentMode === 'remove') {
+                    canvasContext.fillStyle = 'rgba(255, 0, 0, 0.5)'; // Red for removal
+                } else {
+                    canvasContext.fillStyle = 'rgba(0, 255, 0, 0.5)'; // Green for restoration
+                }
+                
+                canvasContext.beginPath();
+                canvasContext.arc(x, y, currentBrushSize, 0, Math.PI * 2);
+                canvasContext.fill();
+            }
+
+            function stopDrawing() {
+                isDrawing = false;
+            }
+
+            function resetTool() {
+                fileInput.value = '';
+                originalFile = null;
+                processedBlob = null;
+                previewSection.style.display = 'none';
+                uploadArea.style.display = '';
+                processBtn.disabled = true;
+                downloadBtn.disabled = true;
+                statusEl.textContent = '';
+                setMode('auto');
+            }
+
+            function showStatus(message, type) {
+                statusEl.textContent = message;
+                statusEl.className = 'status ' + (type || '');
+            }
+
+            function processImage() {
+                if (!originalFile) return;
+
+                showStatus('Processing image...', '');
+                processBtn.disabled = true;
+
+                // Create working canvas
+                const canvas = document.createElement('canvas');
+                canvas.width = imageWidth;
+                canvas.height = imageHeight;
+                const ctx = canvas.getContext('2d');
+
+                // Draw original image
+                ctx.drawImage(imagePreview, 0, 0);
+
+                // Get marked areas from overlay
+                const overlayData = canvasContext.getImageData(0, 0, imageWidth, imageHeight);
+                const overlayPixels = overlayData.data;
+
+                // Get original image data
+                const imageData = ctx.getImageData(0, 0, imageWidth, imageHeight);
+                const pixels = imageData.data;
+
+                // Auto background removal (simple edge detection)
+                if (currentMode === 'auto') {
+                    // Simple background detection (in a real app, use more advanced AI)
+                    const bgColor = getAverageBackgroundColor(pixels);
+                    const threshold = 30;
+                    
+                    for (let i = 0; i < pixels.length; i += 4) {
+                        const r = pixels[i];
+                        const g = pixels[i + 1];
+                        const b = pixels[i + 2];
+                        
+                        // Check if pixel is close to background color
+                        if (Math.abs(r - bgColor.r) < threshold &&
+                            Math.abs(g - bgColor.g) < threshold &&
+                            Math.abs(b - bgColor.b) < threshold) {
+                            pixels[i + 3] = 0; // Set alpha to 0 (transparent)
+                        }
+                    }
+                } else {
+                    // Manual selection mode
+                    for (let i = 0; i < pixels.length; i += 4) {
+                        const overlayIndex = i / 4 * 4;
+                        
+                        // Check if pixel is marked for removal (red)
+                        if (overlayPixels[overlayIndex] > 0 && currentMode === 'remove') {
+                            pixels[i + 3] = 0; // Set alpha to 0 (transparent)
+                        }
+                        // Check if pixel is marked for restoration (green)
+                        else if (overlayPixels[overlayIndex + 1] > 0 && currentMode === 'restore') {
+                            // Restore original pixel
+                            pixels[i] = originalImageData.data[i];
+                            pixels[i + 1] = originalImageData.data[i + 1];
+                            pixels[i + 2] = originalImageData.data[i + 2];
+                            pixels[i + 3] = originalImageData.data[i + 3];
+                        }
+                    }
+                }
+
+                ctx.putImageData(imageData, 0, 0);
+
+                // Apply background if not transparent
+                const bgType = bgTypeSelect.value;
+                if (bgType !== 'transparent') {
+                    // Create temp canvas for compositing
+                    const tempCanvas = document.createElement('canvas');
+                    tempCanvas.width = imageWidth;
+                    tempCanvas.height = imageHeight;
+                    const tempCtx = tempCanvas.getContext('2d');
+                    
+                    // Draw background first
+                    if (bgType === 'solid') {
+                        tempCtx.fillStyle = bgColor1.value;
+                        tempCtx.fillRect(0, 0, imageWidth, imageHeight);
+                    } else if (bgType === 'gradient') {
+                        const gradient = tempCtx.createLinearGradient(0, 0, imageWidth, imageHeight);
+                        gradient.addColorStop(0, bgColor1.value);
+                        gradient.addColorStop(1, bgColor2.value);
+                        tempCtx.fillStyle = gradient;
+                        tempCtx.fillRect(0, 0, imageWidth, imageHeight);
+                    }
+                    
+                    // Draw foreground with transparency on top
+                    tempCtx.drawImage(canvas, 0, 0);
+                    
+                    // Update canvas with composited image
+                    ctx.drawImage(tempCanvas, 0, 0);
+                }
+
+                // Update preview
+                imagePreview.src = canvas.toDataURL();
+                
+                // Store processed image
+                canvas.toBlob(function(blob) {
+                    processedBlob = blob;
+                    processBtn.disabled = false;
+                    downloadBtn.disabled = false;
+                    showStatus('Processing complete! Click Download to save.', 'success');
+                }, originalFile.type);
+            }
+
+            // Helper function to estimate background color (simplified)
+            function getAverageBackgroundColor(pixels) {
+                // Sample edges to estimate background color
+                let r = 0, g = 0, b = 0, count = 0;
+                
+                // Sample top edge
+                for (let i = 0; i < imageWidth * 4; i += 4) {
+                    r += pixels[i];
+                    g += pixels[i + 1];
+                    b += pixels[i + 2];
+                    count++;
+                }
+                
+                // Sample bottom edge
+                const bottomStart = (imageHeight - 1) * imageWidth * 4;
+                for (let i = bottomStart; i < bottomStart + imageWidth * 4; i += 4) {
+                    r += pixels[i];
+                    g += pixels[i + 1];
+                    b += pixels[i + 2];
+                    count++;
+                }
+                
+                return {
+                    r: Math.round(r / count),
+                    g: Math.round(g / count),
+                    b: Math.round(b / count)
+                };
+            }
+
+            function downloadImage() {
+                if (!processedBlob) return;
+
+                const newFileName = originalFile.name.replace(/\.[^/.]+$/, '') + '_nobg' + originalFile.name.substring(originalFile.name.lastIndexOf('.'));
+
+                const url = URL.createObjectURL(processedBlob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = newFileName;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                showStatus('Download started!', 'success');
+            }
+
+            // Initialize
+            setMode('auto');
+            updateBackgroundControls();
+            updateBrushSize();
+        });
+    </script>
+</body>
+</html>
